@@ -6,16 +6,20 @@ import asyncio
 import os
 
 from models import Notification
-from notification_processors import load_processors
+from notification_processors import load_notification_processors, NotificationProcessor
 
 
-processors = [] # load_processors()
+
+
+processors: list[NotificationProcessor] = []
+deps: DependenciesHandler = DependenciesHandler()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup phase
     global processors
-    processors = load_processors()
+    processors = load_notification_processors()
     yield
     # Shutdown phase (optional cleanup)
     print("Shutting down notification server...")
