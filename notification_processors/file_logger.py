@@ -2,13 +2,18 @@ import datetime
 import aiofiles
 from models import Notification
 
-from .base_class import NotificationProcessor
+from .notification_processor import NotificationProcessor, ProcessingResult
+
 
 class FileLogger(NotificationProcessor):
-    async def process(self, notification: Notification) -> None:
+    async def _process(self, notification: Notification) -> ProcessingResult:
         ts = datetime.datetime.now().isoformat()
-        async with aiofiles.open(f"logs/{notification.source.lower()}.log", mode="a") as f:
-            await f.write(f"[{ts}] {notification.severity.upper()}: {notification.title} - {notification.message}\n")
+        try:
+            async with aiofiles.open(f"logs/{notification.source.lower()}.log", mode="a") as f:
+                await f.write(f"[{ts}] {notification.severity.upper()}: {notification.title} - {notification.message}\n")
+            return ProcessingResult.Success
+        except:
+            return ProcessingResult.Fail
 
 def get_instance() -> NotificationProcessor:
     return FileLogger()

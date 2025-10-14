@@ -1,21 +1,20 @@
 import importlib
 import pkgutil
 from types import FunctionType, ModuleType
-from typing import Final, Sequence, Iterable
+from typing import Final, Sequence, Iterable, Callable
 
-from .base_class import NotificationProcessor
+from .notification_processor import NotificationProcessor
 
 GET_INSTANCE_METHOD: Final[str] = "get_instance"
 
 
-def load_notification_processors() -> Sequence[NotificationProcessor]:
-    processors_list: list[NotificationProcessor] = []
+def load_notification_processors() -> Sequence[tuple[type, Callable[[], NotificationProcessor]]]:
+    processors_list: list[tuple[type, Callable[[], NotificationProcessor]]] = []
 
     for module in _find_implementations():
         get_instance_function: FunctionType = getattr(module, GET_INSTANCE_METHOD)
-        processors_list.append(get_instance_function())
+        processors_list.append((type(get_instance_function()), get_instance_function))
 
-    print(f"Loaded {len(processors_list)} processor(s): {[p.__class__.__name__ for p in processors_list]}")
     return processors_list
 
 
