@@ -7,6 +7,9 @@ type InstantiationMethodType = Callable[[IServiceProvider], object]
 
 
 class IServiceRegistrationHandler(Protocol):
+    def is_service_registered[T](self, t: type[T]) -> bool:
+        pass
+
     def get_registered_service_data[T](self, t: type[T]) -> RegisteredService | None:
         ...
 
@@ -54,6 +57,6 @@ class IServiceConstructor(Protocol):
         ...
 
 
-class IDependencyContainer(IServiceScopeFactory, Protocol):
+class IDependencyContainer(IServiceScopeFactory, IServiceRegistrationHandler, Protocol):
     def dispose(self) -> None:
         ...

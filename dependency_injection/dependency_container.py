@@ -24,6 +24,11 @@ class DependencyContainer:
     def dispose(self):
         self._root_scope.dispose()
 
+    def is_service_registered[T](self, t: type[T]) -> bool:
+        identifier = ServiceIdentifier.from_type(t)
+        return identifier in self._registered_services
+
+
     def get_registered_service_data[T](self, t: type[T]) -> RegisteredService | None:
         registered_services = self.get_registered_services_data(t)
 
