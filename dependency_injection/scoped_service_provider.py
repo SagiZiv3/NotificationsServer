@@ -81,8 +81,7 @@ class ScopedServiceProvider:
         instantiation_method = self._service_reg_handler.get_instantiation_method(t, service.implementation_type)
 
         if instantiation_method is None:
-            instantiation_method = functools.partial(self._service_constructor.construct_type,
-                                                     t=service.implementation_type)
+            instantiation_method = functools.partial(self._service_constructor.construct_type, service=service)
         return instantiation_method
 
     def _instantiate_service[T](self, instantiation_method: InstantiationMethodType, service: RegisteredService,

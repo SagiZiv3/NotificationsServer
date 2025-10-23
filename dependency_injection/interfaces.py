@@ -53,7 +53,7 @@ class IServiceScopeFactory(Protocol):
 
 
 class IServiceConstructor(Protocol):
-    def construct_type[T](self, service_provider: IServiceProvider, t: type[T]) -> T:
+    def construct_type[T](self, service_provider: IServiceProvider, service: RegisteredService) -> T:
         ...
 
 
