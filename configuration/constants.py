@@ -1,0 +1,2 @@
+ROOT_PATH=""
+PATH_DELIMITER=":"
