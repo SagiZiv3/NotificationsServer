@@ -8,7 +8,7 @@ class DependencyInjectionException(Exception):
         super().__init__(error_message)
 
 
-class UnregisteredTypeException(DependencyInjectionException):
+class UnregisteredTypeError(DependencyInjectionException):
     def __init__(self, t: type):
         super().__init__(f"Type '{t.__name__}' was not registered")
         self.type = t
@@ -23,7 +23,7 @@ class IncompatibleScopesError(DependencyInjectionException):
         self.dependent_service = dependent_service
 
 
-class UnannotatedParameterException(DependencyInjectionException):
+class UnannotatedParameterError(DependencyInjectionException):
     def __init__(self, parameter_name: str, t: type):
         super().__init__(
             f"Cannot resolve parameter '{parameter_name}' for {t.__name__}.__init__: missing type annotation")
@@ -31,6 +31,6 @@ class UnannotatedParameterException(DependencyInjectionException):
         self.type = t
 
 
-class CircularDependencyException(DependencyInjectionException):
+class CircularDependencyError(DependencyInjectionException):
     def __init__(self, visited: Iterable[type], t: type):
         super().__init__(f"Circular dependency detected: {' → '.join(v.__name__ for v in visited)} → {t.__name__}")

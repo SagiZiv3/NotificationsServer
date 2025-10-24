@@ -1,7 +1,7 @@
 import functools
 from typing import Sequence
 
-from .exceptions import UnregisteredTypeException, CircularDependencyException, IncompatibleScopesError
+from .exceptions import UnregisteredTypeError, CircularDependencyError, IncompatibleScopesError
 from .interfaces import IServiceConstructor, IServiceRegistrationHandler, IServiceProvider, InstantiationMethodType
 from .models import LifeScope, ServiceIdentifier, RegisteredService
 from .service_scope import ServiceScope
@@ -46,7 +46,7 @@ class ScopedServiceProvider:
         service = self.get_service(t)
 
         if service is None:
-            raise UnregisteredTypeException(t)
+            raise UnregisteredTypeError(t)
 
         return service
 
@@ -71,7 +71,7 @@ class ScopedServiceProvider:
 
     def _check_dependency_constraints[T](self, service: RegisteredService, t: type[T]):
         if service in self._visited:
-            raise CircularDependencyException(map(lambda s: s.implementation_type, self._visited), t)
+            raise CircularDependencyError(map(lambda s: s.implementation_type, self._visited), t)
 
         last_visited_service = self._visited[-1] if self._visited else None
         if last_visited_service is not None and service.life_scope < last_visited_service.life_scope:

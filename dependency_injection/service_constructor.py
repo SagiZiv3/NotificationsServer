@@ -1,7 +1,7 @@
 import functools
 import inspect
 
-from .exceptions import UnannotatedParameterException, IncompatibleScopesError
+from .exceptions import UnannotatedParameterError, IncompatibleScopesError
 from .interfaces import IServiceProvider, IServiceRegistrationHandler
 from .models import RegisteredService
 
@@ -25,7 +25,7 @@ class ServiceConstructor:
 
             ann = param.annotation
             if ann is inspect._empty:
-                raise UnannotatedParameterException(name, service.implementation_type)
+                raise UnannotatedParameterError(name, service.implementation_type)
 
             # If the dependency is registered, resolve it according to its life scope
             dependency_registered_service = self.service_reg_handler.get_required_registered_service_data(ann)

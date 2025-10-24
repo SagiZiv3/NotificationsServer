@@ -1,7 +1,7 @@
 import contextlib
 from typing import Mapping, Generator, Sequence
 
-from .exceptions import UnregisteredTypeException
+from .exceptions import UnregisteredTypeError
 from .interfaces import InstantiationMethodType, IServiceScope
 from .models import RegisteredService, ServiceIdentifier
 from .scoped_service_provider import ScopedServiceProvider
@@ -40,7 +40,7 @@ class DependencyContainer:
     def get_required_registered_service_data[T](self, t: type[T]) -> RegisteredService:
         service = self.get_registered_service_data(t)
         if service is None:
-            raise UnregisteredTypeException(t)
+            raise UnregisteredTypeError(t)
 
         return service
 
