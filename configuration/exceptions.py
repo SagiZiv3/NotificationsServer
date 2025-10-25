@@ -1,4 +1,4 @@
-from constants import PATH_DELIMITER
+from .constants import PATH_DELIMITER
 
 class ConfigurationException(Exception):
     def __init__(self, error_message: str):
