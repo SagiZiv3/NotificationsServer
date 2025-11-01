@@ -10,7 +10,7 @@ class ProcessingResult(Enum):
     Skip = 2
 
 
-class NotificationProcessor(ABC):
+class NotificationPublisher(ABC):
     async def process(self, notification: Notification) -> ProcessingResult:
         try:
             return await self._process(notification)
