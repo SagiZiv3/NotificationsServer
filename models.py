@@ -6,3 +6,6 @@ class Notification(BaseModel):
     title: str
     severity: str
     message: str
+
+class TrueNasAlert(BaseModel):
+    text: str

@@ -5,7 +5,7 @@ from collections.abc import Sequence
 from fastapi.responses import JSONResponse
 
 from dependency_injection import DependencyContainerBuilder
-from models import Notification
+from models import Notification, TrueNasAlert
 from notification_publishers import find_notification_publishers, NotificationPublisher, ProcessingResult, \
     TelegramConfig, GotifyConfig
 from web_application import WebApplicationBuilder, WebApplication
@@ -26,6 +26,12 @@ async def process_notification(notification: Notification, notification_publishe
                  "success": counter.get(ProcessingResult.Success, 0)},
         status_code=200,
     )
+
+
+async def process_true_nas_notification(data: TrueNasAlert, notification_publishers: tuple[NotificationPublisher]):
+    print(f'Got {data} from TrueNAS')
+    notification = Notification(source='truenas', title='Message from TrueNAS', severity='unknown', message=data.text)
+    await process_notification(notification, notification_publishers)
 
 
 def add_notification_processors_to_di(di: DependencyContainerBuilder):
@@ -49,6 +55,9 @@ if __name__ == "__main__":
 
     app: WebApplication = wab.build()
     app.map_post('/notify', process_notification) \
+        .with_dependencies() \
+        .apply()
+    app.map_post('/truenas-notify', process_true_nas_notification) \
         .with_dependencies() \
         .apply()
     app.run()
